@@ -363,8 +363,8 @@
     <img src="logo.png" alt="CTO for a Day" class="logo">
     <div class="title">CTO for a Day</div>
     <div class="tagline">
-      10 dilemas. 5 segundos cada. Sem Google. Sem comite.<br>
-      Voce eh o CTO agora.
+      10 dilemas. 5 segundos cada. Sem Google. Sem comitê.<br>
+      Você é o CTO agora.
     </div>
     <div class="subtitle">[ CLASSIFICADO // USO INTERNO ]</div>
     <button class="btn-start" id="btn-start">INICIAR</button>
@@ -387,9 +387,9 @@
   <div id="end-screen">
     <div class="memo-header">
       <div class="label">MEMO CONFIDENCIAL</div>
-      <div class="field">DE: Conselho de Administracao</div>
+      <div class="field">DE: Conselho de Administração</div>
       <div class="field">PARA: CTO Interino</div>
-      <div class="field">RE: Avaliacao de Desempenho</div>
+      <div class="field">RE: Avaliação de Desempenho</div>
     </div>
     <div class="memo-score" id="memo-score"></div>
     <div class="memo-body" id="memo-body"></div>
@@ -414,7 +414,7 @@ const QUESTIONS = [
   },
   {
     id: 2,
-    text: "Sexta-feira, 17h, véspera de feriado prolongado. Deploy de feature crítica passou nos testes mas um dev junior tem 'um pressentimento ruim'. Você:",
+    text: "Sexta-feira, 17h, véspera de feriado prolongado. Deploy de feature crítica passou nos testes mas um dev júnior tem 'um pressentimento ruim'. Você:",
     optionA: { label: "Manda ver. Testes passaram, é isso.", correct: false },
     optionB: { label: "Segura. Deploy na terça com olhos frescos.", correct: true },
     timeout_pick: "a"
@@ -498,7 +498,7 @@ const QUESTIONS = [
   },
   {
     id: 14,
-    text: "Dev senior sumiu. Não responde há 2 dias. Projeto crítico parado. Você:",
+    text: "Dev sênior sumiu. Não responde há 2 dias. Projeto crítico parado. Você:",
     optionA: { label: "Começa processo de demissão. Abandono é inaceitável.", correct: false },
     optionB: { label: "Espera mais 2 dias. Pode ser emergência pessoal.", correct: true },
     timeout_pick: "a"
@@ -513,7 +513,7 @@ const QUESTIONS = [
   {
     id: 16,
     text: "Descobriu que o banco de dados de produção não tem backup há 3 semanas. Ninguém percebeu. Você:",
-    optionA: { label: "Agenda correção pro próximo sprint.", correct: false },
+    optionA: { label: "Agenda correção para o próximo sprint.", correct: false },
     optionB: { label: "Para tudo e corrige AGORA. Sem backup = risco existencial.", correct: true },
     timeout_pick: "a"
   },
@@ -548,10 +548,10 @@ const QUESTIONS = [
 ];
 
 const VERDICTS = [
-  { min: 0, max: 3, text: "Voce destruiu a empresa em tempo recorde. O conselho agradece a transparencia na saida." },
-  { min: 4, max: 6, text: "Sobreviveu. O monolito tambem. Por enquanto." },
+  { min: 0, max: 3, text: "Você destruiu a empresa em tempo recorde. O conselho agradece a transparência na saída." },
+  { min: 4, max: 6, text: "Sobreviveu. O monolito também. Por enquanto." },
   { min: 7, max: 9, text: "Eficiente, frio, funcional. Exatamente o que o board queria." },
-  { min: 10, max: 10, text: "Impossivel. Voce trapaceou ou nunca trabalhou em startup." }
+  { min: 10, max: 10, text: "Impossível. Você trapaceou ou nunca trabalhou em startup." }
 ];
 
 const TIMER_DURATION = 5000;
@@ -777,7 +777,7 @@ function typeWriter(el, text, i) {
 
 function shareResult() {
   const survived = score >= 4;
-  const text = `${survived ? "I survived" : "I didn't survive"} as CTO for a Day. Score: ${score}/${ROUND_COUNT} — "${lastVerdict}" Try it: https://felipebossolani.github.io/cto-for-a-day/`;
+  const text = `${survived ? "Sobrevivi" : "Não sobrevivi"} como CTO por um dia. Placar: ${score}/${ROUND_COUNT} — "${lastVerdict}" Tente você: https://felipebossolani.github.io/cto-for-a-day/`;
   navigator.clipboard.writeText(text).then(() => {
     const btn = $("btn-share");
     btn.textContent = "COPIADO!";
