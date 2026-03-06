@@ -4,6 +4,26 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CTO for a Day</title>
+
+<!-- Favicons -->
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="manifest" href="site.webmanifest">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="CTO for a Day">
+<meta property="og:description" content="10 decisions. 5 seconds each. Think you can run a tech company?">
+<meta property="og:image" content="logo.png">
+<meta property="og:url" content="https://felipebossolani.github.io/cto-for-a-day/">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="CTO for a Day">
+<meta name="twitter:description" content="10 decisions. 5 seconds each. Think you can run a tech company?">
+<meta name="twitter:image" content="logo.png">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -16,6 +36,23 @@
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    position: relative;
+  }
+
+  /* Scanline overlay */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 200;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.15) 2px,
+      rgba(0, 0, 0, 0.15) 4px
+    );
   }
 
   .container {
@@ -26,6 +63,17 @@
   }
 
   /* START SCREEN */
+  #start-screen .logo {
+    width: clamp(120px, 30vw, 180px);
+    height: auto;
+    margin-bottom: 24px;
+    filter: grayscale(20%) contrast(1.1);
+    opacity: 0.9;
+    border: 2px solid #333;
+    padding: 4px;
+    background: rgba(13, 13, 13, 0.8);
+  }
+
   #start-screen .title {
     font-size: clamp(2rem, 6vw, 3.5rem);
     font-weight: bold;
@@ -256,6 +304,49 @@
     border-color: #666;
   }
 
+  .end-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-share {
+    background: transparent;
+    color: #00FF41;
+    border: 1px solid #00FF41;
+    padding: 12px 32px;
+    font-family: inherit;
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .btn-share:hover {
+    background: rgba(0, 255, 65, 0.1);
+  }
+
+  .btn-share.copied {
+    color: #0D0D0D;
+    background: #00FF41;
+    border-color: #00FF41;
+  }
+
+  /* FOOTER */
+  .footer {
+    position: fixed;
+    bottom: 12px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 0.65rem;
+    color: #333;
+    letter-spacing: 1px;
+    pointer-events: none;
+  }
+
   /* HIDDEN UTILITY */
   .hidden { display: none !important; }
 </style>
@@ -269,6 +360,7 @@
 
   <!-- START SCREEN -->
   <div id="start-screen">
+    <img src="logo.png" alt="CTO for a Day" class="logo">
     <div class="title">CTO for a Day</div>
     <div class="tagline">
       10 dilemas. 5 segundos cada. Sem Google. Sem comite.<br>
@@ -301,10 +393,15 @@
     </div>
     <div class="memo-score" id="memo-score"></div>
     <div class="memo-body" id="memo-body"></div>
-    <button class="btn-restart hidden" id="btn-restart">TENTAR DE NOVO</button>
+    <div class="end-actions hidden" id="end-actions">
+      <button class="btn-restart" id="btn-restart">TENTAR DE NOVO</button>
+      <button class="btn-share" id="btn-share">COMPARTILHAR</button>
+    </div>
   </div>
 
 </div>
+
+<div class="footer">Made with ☕ and bad decisions</div>
 
 <script>
 const QUESTIONS = [
@@ -654,12 +751,15 @@ function endGame() {
   showScreen("end-screen");
 
   const verdict = VERDICTS.find(v => score >= v.min && score <= v.max);
+  lastVerdict = verdict.text;
   $("memo-score").textContent = `RESULTADO: ${score}/${ROUND_COUNT}`;
 
   const body = $("memo-body");
   body.innerHTML = "";
   typeWriter(body, verdict.text, 0);
 }
+
+let lastVerdict = "";
 
 function typeWriter(el, text, i) {
   if (i < text.length) {
@@ -671,17 +771,32 @@ function typeWriter(el, text, i) {
     setTimeout(() => typeWriter(el, text, i + 1), TYPEWRITER_SPEED);
   } else {
     el.textContent = text;
-    $("btn-restart").classList.remove("hidden");
+    $("end-actions").classList.remove("hidden");
   }
+}
+
+function shareResult() {
+  const survived = score >= 4;
+  const text = `${survived ? "I survived" : "I didn't survive"} as CTO for a Day. Score: ${score}/${ROUND_COUNT} — "${lastVerdict}" Try it: https://felipebossolani.github.io/cto-for-a-day/`;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = $("btn-share");
+    btn.textContent = "COPIADO!";
+    btn.classList.add("copied");
+    setTimeout(() => {
+      btn.textContent = "COMPARTILHAR";
+      btn.classList.remove("copied");
+    }, 2000);
+  });
 }
 
 $("btn-start").addEventListener("click", startGame);
 $("btn-a").addEventListener("click", () => handleAnswer("a"));
 $("btn-b").addEventListener("click", () => handleAnswer("b"));
 $("btn-restart").addEventListener("click", () => {
-  $("btn-restart").classList.add("hidden");
+  $("end-actions").classList.add("hidden");
   startGame();
 });
+$("btn-share").addEventListener("click", shareResult);
 </script>
 </body>
 </html>
